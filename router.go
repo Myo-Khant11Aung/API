@@ -36,5 +36,6 @@ func NewRouter(db *sql.DB) *Router{
 	r.addRoute("POST", "/tasks", service.AddTask)
 	r.addRoute("GET", "/tasks", service.GetTasks)
 	r.addRoute("DELETE", "/tasks", service.DeletTask)
+	r.addRoute("PUT", "/tasks", service.EditTask)
 	return r
 }

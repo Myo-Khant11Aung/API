@@ -93,13 +93,28 @@ func (s *Services) DeletTask(w http.ResponseWriter, req *http.Request){
 
 }
 
-// func (s *Services) EditTask(w http.ResponseWriter, req *http.Request){
-// 	taskRequest := Task{}
-// 	err := ReadFromRequestBody(req, &taskRequest)
-// 	if err != nil {
-// 		WriteErrToResponseBody(w, err)
-// 		return
-// 	}
+func (s *Services) EditTask(w http.ResponseWriter, req *http.Request){
+	taskRequest := Task{}
+	err := ReadFromRequestBody(req, &taskRequest)
+	if err != nil {
+		WriteErrToResponseBody(w, err)
+		return
+	}
 
+	if taskRequest.ID == 0 {
+		http.Error(w, "Task ID needed", http.StatusBadRequest)
+		return
+	}
+	if taskRequest.Name == "" {
+		http.Error(w, "Task name neded", http.StatusBadRequest)
+		return
+	}
 
-// }
+	SQL := `UPDATE tasks SET name = $1 WHERE id = $2 RETURNING id, name`
+	err = s.db.QueryRow(SQL, taskRequest.Name, taskRequest.ID).Scan(&taskRequest.ID, &taskRequest.Name)
+	if err != nil {
+		WriteErrToResponseBody(w, err)
+		return
+	}
+	s.GetTasks(w,req)
+}
