@@ -7,7 +7,7 @@ import (
 func EnableCors(w http.ResponseWriter, req *http.Request) {
 	// Set CORS headers to allow requests from any frontend
 	w.Header().Set("Access-Control-Allow-Origin", "*") // Allow requests from any origin
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE") // Allowed HTTP methods
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT") // Allowed HTTP methods
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization") // Allowed headers
 	w.WriteHeader(http.StatusOK)
 }
@@ -116,5 +116,5 @@ func (s *Services) EditTask(w http.ResponseWriter, req *http.Request){
 		WriteErrToResponseBody(w, err)
 		return
 	}
-	s.GetTasks(w,req)
+	WriteToResponseBody(w, taskRequest)
 }
